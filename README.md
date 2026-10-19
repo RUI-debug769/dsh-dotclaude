@@ -119,7 +119,7 @@ Four gates, all runnable locally:
 
 ```sh
 npm run typecheck                      # 1. types
-npm run build && npm test              # 2. unit + host-double integration (52 tests)
+npm run build && npm test              # 2. unit + host-double integration (53 tests)
 DOTCLAUDE_MATRIX=1 ./scripts/host-smoke.sh   # 3. real host compose+boot; 4. dsh-tui matrix
 ```
 
