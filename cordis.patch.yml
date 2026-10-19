@@ -1,0 +1,9 @@
+# Bundle patch: mount the plugin as one profile row.
+#
+# An insert list adds rows; it never restates rows another layer already owns.
+# The plugin probes every host service it uses, so the row is safe in a profile
+# that serves only the Web UI, only a terminal, or no interactive surface.
+- insert:
+    - id: dotclaude
+      name: 'dsh-dotclaude'
+      config: {}
