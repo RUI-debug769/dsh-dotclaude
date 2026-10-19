@@ -8,6 +8,7 @@
 #   ./scripts/host-smoke.sh                 # compose + boot
 #   DOTCLAUDE_MATRIX=1 ./scripts/host-smoke.sh   # also probe dsh-tui 0.14.0 / 0.16.1
 #   DOTCLAUDE_SMOKE_KEEP=1 ./scripts/host-smoke.sh # keep the temporary DSH_HOME
+#   DOTCLAUDE_INSTALL_SPEC=dsh-dotclaude ./scripts/host-smoke.sh  # install the published package
 #
 # HARNESS points at a deepseek-harness checkout; the launcher is run from source
 # through tsx, exactly like `pnpm dsh`.
@@ -16,6 +17,7 @@ set -euo pipefail
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 HARNESS="${HARNESS:-$HOME/projects/harness}"
 PROFILE="${DOTCLAUDE_PROFILE:-dotclaude-smoke}"
+INSTALL_SPEC="${DOTCLAUDE_INSTALL_SPEC:-link:$PLUGIN_DIR}"
 DSH_HOME_DIR="${DSH_SMOKE_HOME:-$(mktemp -d "${TMPDIR:-/tmp}/dotclaude-smoke.XXXXXX")}"
 BOOT_LOG="$DSH_HOME_DIR/boot.log"
 
@@ -44,7 +46,7 @@ echo "== 2/4 create profile from the shipped web template"
 dsh --profile "$PROFILE" --from-default-profile web --dump-config >/dev/null
 
 echo "== 3/4 install the plugin and compose it"
-dsh plugin --profile "$PROFILE" add "link:$PLUGIN_DIR" >/dev/null
+dsh plugin --profile "$PROFILE" add "$INSTALL_SPEC" >/dev/null
 composed="$(dsh --profile "$PROFILE" --dump-config)"
 if ! grep -q "name: dsh-dotclaude" <<<"$composed"; then
   echo "host-smoke: FAIL the composed profile has no dsh-dotclaude row" >&2
